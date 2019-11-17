@@ -1,5 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import './App.scss';
+import { Provider } from 'react-redux';
+import store from './store';
 import Upload from './Pages/Upload/Upload';
 import Main from './Components/Main/Main';
 import Videos from './Pages/Videos/Videos';
@@ -10,7 +12,7 @@ import Navbar from './Components/Navbar/Navbar';
 
 function App() {
   return (
-    <Fragment>
+    <Provider store={store}>
       <Router>
         <Navbar />
         <Switch>
@@ -22,7 +24,7 @@ function App() {
           <Route path="/">Sorry that was not found</Route>
         </Switch>
       </Router>
-    </Fragment>
+    </Provider>
   );
 }
 

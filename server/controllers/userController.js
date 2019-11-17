@@ -32,3 +32,7 @@ module.exports.loginUser = asyncHelper(async (req, res, next) => {
     return res.json({ jwt: user.getJWT() });
   }
 });
+
+module.exports.getMe = (req, res, next) => {
+  return res.json({ user: req.user });
+};
