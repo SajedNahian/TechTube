@@ -1,0 +1,118 @@
+.main {
+  background-color: white;
+  padding: 1.2rem 1.2rem;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  .video {
+    padding: 0.8rem;
+    box-shadow: 0 1px #ffffff inset, 0 1px 3px rgba(34, 25, 25, 0.4);
+    .video-creator {
+      display: flex;
+      align-items: center;
+
+      .name {
+        margin-left: 0.4rem;
+      }
+    }
+    .profile-picture {
+      border-radius: 50%;
+      height: 40px;
+    }
+  }
+
+  .header {
+    padding: 0 0.8rem 1rem 0.8rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .right {
+      display: flex;
+
+      .likes {
+        margin-right: 1.4rem;
+      }
+    }
+
+    .title {
+      margin-top: 0.8rem;
+    }
+  }
+
+  .suggestions {
+    grid-row: 1 / span 3;
+    grid-column: 2 / span 2;
+
+    .suggestion {
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 1px #ffffff inset, 0 1px 3px rgba(34, 25, 25, 0.4);
+      margin-left: 1.2rem;
+      img {
+        width: 100%;
+      }
+
+      h3 {
+        margin-top: 0.4rem;
+      }
+    }
+  }
+
+  .comments {
+    margin-top: 0.4rem;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.4rem;
+    box-shadow: 0 1px #ffffff inset, 0 1px 3px rgba(34, 25, 25, 0.4);
+    .comment-form {
+      margin-top: 0.4rem;
+      margin-bottom: 1rem;
+      textarea {
+        &:focus {
+          outline: none;
+          border: 1px solid rgb(0, 0, 0);
+        }
+        width: 100%;
+        height: 100px;
+        padding: 0.4rem;
+        font-size: 0.9rem;
+      }
+    }
+    .comment {
+      margin-bottom: 0.4rem;
+      border-bottom: 1px solid rgb(150, 148, 148);
+      display: flex;
+      padding: 0.6rem;
+      .profile-picture {
+        margin-right: 1.4rem;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      .comment-text {
+        margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
+      }
+    }
+  }
+
+  .lower-info {
+    padding: 0 0.8rem 0.4rem 0.8rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.video-react {
+  font-size: 0.8rem;
+}
+
+.video-react-play-progress.video-react-slider-bar:after,
+.video-react-current-time-display,
+.video-react-time-divider,
+.video-react-duration-display {
+  font-family: 'Montserrat', sans-serif !important;
+}

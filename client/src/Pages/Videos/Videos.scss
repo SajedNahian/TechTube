@@ -1,0 +1,12 @@
+.videoMain {
+  margin-top: 1rem;
+
+  .title {
+    margin-bottom: 0.8rem;
+  }
+
+  .videos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

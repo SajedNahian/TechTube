@@ -1,0 +1,35 @@
+nav {
+  width: 100%;
+  display: flex;
+  padding: 0.4rem 1.6rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: white;
+
+  h2 {
+    color: white;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+    color: white;
+  }
+
+  .profile {
+    margin-top: 0.2rem;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+
+    .upload-btn {
+      font-size: 2rem;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.progressBar {
+  border: 1px solid #333;
+  height: 24px;
+
+  &-percentage {
+    height: 100%;
+    background-color: #b5bfb7;
+  }
+}

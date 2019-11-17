@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+input,
+textarea {
+  font-family: 'Montserrat', sans-serif;
+}
+
+video {
+  width: 50%;
+}
+
+p {
+  line-height: 1.4rem;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  background: #333;
+  color: white;
+  cursor: pointer;
+
+  &-red {
+    background-color: #cc0000;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
