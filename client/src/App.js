@@ -8,9 +8,8 @@ import { authenticateUser } from './actions/authActions';
 
 function App() {
   useEffect(() => {
-    if (localStorage.getItem('jwt')) {
-      setAuthToken(localStorage.getItem('jwt'));
-    }
+    if (localStorage.getItem('jwt')) setAuthToken(localStorage.getItem('jwt'));
+
     store.dispatch(authenticateUser());
   }, []);
 
