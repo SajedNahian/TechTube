@@ -1,0 +1,18 @@
+.votes {
+  .fa-thumbs-up {
+    margin-right: 0.4rem;
+  }
+
+  .fa-thumbs-down {
+    margin-left: 0.5rem;
+  }
+
+  i {
+    color: #909090;
+    cursor: pointer;
+
+    &:hover {
+      color: darken($color: #909090, $amount: 20);
+    }
+  }
+}

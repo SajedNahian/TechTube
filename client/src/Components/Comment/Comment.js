@@ -1,24 +1,18 @@
 import React from 'react';
+import './Comment.scss';
 
-export default function Comment() {
+export default function Comment({ text, user: { username, profilePicture } }) {
   return (
     <div className="comment">
-      <img
-        className="profile-picture"
-        src="https://icon-library.net/images/no-profile-picture-icon/no-profile-picture-icon-13.jpg"
-      />
+      <img className="profile-picture" src={profilePicture} />
       <div className="comment-body">
         <p>
-          <a href="#">TheHappyMan12</a>
+          <a href="#">{username}</a>
         </p>
-        <p className="comment-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam non porta
-          augue. Nulla arcu dolor, faucibus scelerisque sagittis et, bibendum a
-          tortor. Aenean facilisis efficitur auctor. Nunc leo dolor, porttitor
-          non metus nec, ullamcorper blandit magna. Suspendisse sagittis nulla
-          ut risus volutpat, a tincidunt felis ultricies.{' '}
+        <p className="comment-text">{text}</p>
+        <p className="votes">
+          <i className="fa fa-thumbs-up"></i>2<i class="fa fa-thumbs-down"></i>
         </p>
-        <p>👍2 👎</p>
       </div>
     </div>
   );

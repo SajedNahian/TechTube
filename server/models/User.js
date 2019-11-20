@@ -13,11 +13,14 @@ const userSchema = new mongoose.Schema({
     default:
       'https://icon-library.net/images/no-profile-picture-icon/no-profile-picture-icon-13.jpg'
   },
+  subscribers: {
+    type: Number,
+    default: 0
+  },
   password: {
     type: String,
     minlength: [5, 'Password must be alteast 5 characters long'],
-    required: [true, 'Password is required'],
-    select: false
+    required: [true, 'Password is required']
   }
 });
 

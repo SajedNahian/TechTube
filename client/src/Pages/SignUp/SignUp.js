@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { signUpUser } from '../../actions/authActions';
 import './SignUp.scss';
 
-export default function SignUp() {
+function SignUp({ signUpUser }) {
   const [form, setForm] = useState({
     username: '',
     password: ''
@@ -18,12 +19,7 @@ export default function SignUp() {
 
   const onSubmit = async e => {
     e.preventDefault();
-    try {
-      const response = await axios.post('/api/user/', form);
-      console.log(response.data);
-    } catch (e) {
-      console.log(e.response.data);
-    }
+    signUpUser(form);
   };
 
   return (
@@ -56,3 +52,5 @@ export default function SignUp() {
     </div>
   );
 }
+
+export default connect(null, { signUpUser })(SignUp);

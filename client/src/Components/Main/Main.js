@@ -4,39 +4,37 @@ import axios from 'axios';
 import 'video-react/dist/video-react.css';
 import './Main.scss';
 import Suggestion from '../Suggestion/Suggestion';
-import Comment from '../Comment/Comment';
+import CommentsContainer from '../CommentsContainer/CommentsContainer';
 import Spinner from '../Spinner/Spinner';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { loadVideo } from '../../actions/videoActions';
+import formatDate from '../../utils/formatDate';
 
 function Main({
   match: {
     params: { videoId }
-  }
+  },
+  video: { loading, video },
+  loadVideo
 }) {
-  const [loading, setLoading] = useState(true);
-  const [video, setVideo] = useState({});
   const [suggestedVideos, setSuggestedVideos] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
     setSuggestedVideos([]);
     const getVideo = async () => {
       try {
-        let response = await axios.get(`/api/videos/${videoId}`);
-        setVideo(response.data.video);
-        setLoading(false);
-
-        response = await axios.get(`/api/videos/${videoId}/suggestions`);
+        let response = await axios.get(`/api/videos/${videoId}/suggestions`);
         setSuggestedVideos(response.data.videos);
-      } catch (e) {
-        setVideo(null);
-        setLoading(false);
-      }
+      } catch (e) {}
     };
+    loadVideo(videoId);
     getVideo();
   }, [videoId]);
   if (loading) return <Spinner />;
   if (!video) return <Redirect to="/videos" />;
+
+  const { author } = video;
 
   return (
     <div>
@@ -46,22 +44,26 @@ function Main({
           <div className="header">
             <div className="left">
               <h1 className="title">{video.title}</h1>
-              <p>{video.views} views - January 1, 2012</p>
+              <p>
+                {video.views} views - {formatDate(video.datePosted)}
+              </p>
             </div>
             <div className="right">
-              <div className="likes">👍13</div>
-              <div className="dislikes">👎2</div>
+              <div className="likes">
+                <i className="fa fa-thumbs-up" />
+                13
+              </div>
+              <div className="dislikes">
+                <i className="fa fa-thumbs-down" />2
+              </div>
             </div>
           </div>
           <div className="lower-info">
             <div className="video-creator">
-              <img
-                className="profile-picture"
-                src="https://icon-library.net/images/no-profile-picture-icon/no-profile-picture-icon-13.jpg"
-              />
+              <img className="profile-picture" src={author.profilePicture} />
               <p className="name">
-                <a href="#">ChickenMan12</a>
-                <p>1,200 subscribers</p>
+                <a href="#">{author.username}</a>
+                <p>{author.subscribers} subscribers</p>
               </p>
             </div>
             <button className="btn btn-red">Subscribe</button>
@@ -76,19 +78,14 @@ function Main({
             ))
           )}
         </div>
-        <div className="comments">
-          <h2>Comments</h2>
-          <form className="comment-form">
-            <textarea placeholder="What are your thoughts?"></textarea>
-            <button className="btn">Comment</button>
-          </form>
-          <Comment />
-          <Comment />
-          <Comment />
-        </div>
+        <CommentsContainer videoId={videoId} />
       </div>
     </div>
   );
 }
 
-export default Main;
+const mapStateToProps = state => ({ video: state.video });
+
+export default connect(mapStateToProps, {
+  loadVideo
+})(Main);

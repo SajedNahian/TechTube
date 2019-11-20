@@ -15,6 +15,11 @@ const videoSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Author attribute is required']
+  },
   datePosted: {
     type: Date,
     required: [true, 'Video must have date posted'],

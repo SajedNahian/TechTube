@@ -19,11 +19,13 @@ module.exports.loginUser = asyncHelper(async (req, res, next) => {
   if (!user) {
     return next({
       status: 400,
-      message: 'A user with that username does not exist'
+      message: 'Invalid username and password combination'
     });
   }
 
-  if (!password || !user.matchPassword(password)) {
+  const passwordMatch = await user.matchPassword(password);
+
+  if (!password || !passwordMatch) {
     return next({
       status: 400,
       message: 'Invalid username and password combination'

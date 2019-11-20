@@ -1,4 +1,5 @@
 const express = require('express');
+const { protect } = require('../middleware/auth');
 const router = express.Router();
 
 const {
@@ -10,7 +11,7 @@ const {
 
 router
   .route('/')
-  .post(handleUpload)
+  .post(protect, handleUpload)
   .get(getAllVideos);
 
 router.route('/stream/:videoId').get(streamVideo);

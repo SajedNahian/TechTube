@@ -4,8 +4,9 @@ import {
 } from '../actions/types';
 
 const initialState = {
+  loading: true,
   isAuthenticated: false,
-  user: {}
+  user: null
 };
 
 export default (state = initialState, { type, payload }) => {
@@ -14,13 +15,15 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         isAuthenticated: true,
-        user: payload
+        user: payload,
+        loading: false
       };
     case USER_AUTHENTICATION_FAILED:
       return {
         ...state,
         isAuthenticated: false,
-        user: {}
+        user: null,
+        loading: false
       };
     default:
       return state;

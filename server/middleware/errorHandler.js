@@ -5,7 +5,7 @@ const errorHandler = (err, req, res, next) => {
   if (err.status) {
     return res.status(err.status).json({
       success: false,
-      error: [err.message]
+      errors: [err.message]
     });
   }
 
@@ -13,12 +13,12 @@ const errorHandler = (err, req, res, next) => {
     const message = Object.values(err.errors).map(val => val.message);
     return res.status(400).json({
       success: false,
-      error: message
+      errors: message
     });
   }
   res.status(500).json({
     success: false,
-    error: ['Something went wrong']
+    errors: ['Something went wrong']
   });
 };
 

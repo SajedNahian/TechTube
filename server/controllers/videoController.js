@@ -11,7 +11,7 @@ module.exports.handleUpload = asyncHelper(async (req, res, next) => {
     return res.status(400).json({ msg: 'File and title are both required' });
   }
 
-  const video = new Video({ title });
+  const video = new Video({ title, author: req.user.id });
   await video.save();
 
   const file = req.files.file;
@@ -65,7 +65,10 @@ module.exports.getAllVideos = async (req, res) => {
 
 module.exports.getVideo = asyncHelper(async (req, res, next) => {
   const { videoId: uuid } = req.params;
-  const video = await Video.findOne({ uuid });
+  const video = await Video.findOne({ uuid }).populate(
+    'author',
+    'username subscribers profilePicture'
+  );
   if (video) {
     video.views += 1;
     video.save();

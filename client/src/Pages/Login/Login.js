@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { authenticateUser, loginUser } from '../../actions/authActions';
 import './Login.scss';
 
-export default function Login() {
+function Login({ loginUser }) {
   const [form, setForm] = useState({
     username: '',
     password: ''
@@ -18,13 +19,9 @@ export default function Login() {
 
   const onSubmit = async e => {
     e.preventDefault();
-    try {
-      const response = await axios.post('/api/user/login', form);
-      console.log(response.data);
-    } catch (e) {
-      console.log(e.response.data);
-    }
+    loginUser(form);
   };
+
   return (
     <div className="main-login">
       <h1 className="text-center">Log In</h1>
@@ -55,3 +52,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default connect(null, { loginUser })(Login);
