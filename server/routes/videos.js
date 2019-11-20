@@ -14,6 +14,7 @@ router
   .get(getAllVideos);
 
 router.route('/stream/:videoId').get(streamVideo);
+router.use('/:videoId/comments', require('./comments'));
 router.route('/:videoId').get(getVideo);
 router.route('/:videoId/suggestions').get(getAllVideos);
 module.exports = router;

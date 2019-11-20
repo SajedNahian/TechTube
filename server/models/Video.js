@@ -14,6 +14,11 @@ const videoSchema = new mongoose.Schema({
   views: {
     type: Number,
     default: 0
+  },
+  datePosted: {
+    type: Date,
+    required: [true, 'Video must have date posted'],
+    default: Date.now
   }
 });
 
