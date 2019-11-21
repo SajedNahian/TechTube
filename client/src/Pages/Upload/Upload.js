@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import ProgressBar from '../../Components/ProgressBar/ProgressBar';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './Upload.scss';
+import { addError } from '../../actions/errorsActions';
 
-export default function Upload() {
+function Upload({ addError }) {
   const [file, setFile] = useState('');
   const [title, setTitle] = useState('');
   const [percentUploaded, setPercentUploaded] = useState(0);
@@ -34,7 +36,11 @@ export default function Upload() {
       setPercentUploaded(0);
       setUploadComplete(true);
     } catch (err) {
-      console.log(err.response.data.msg);
+      // console.log(err.response.data);
+      err.response.data.errors.forEach(error => {
+        addError(error);
+      });
+      setPercentUploaded(0);
     }
   };
 
@@ -61,3 +67,5 @@ export default function Upload() {
     </div>
   );
 }
+
+export default connect(null, { addError })(Upload);

@@ -6,9 +6,9 @@ import './Main.scss';
 import Suggestion from '../Suggestion/Suggestion';
 import CommentsContainer from '../CommentsContainer/CommentsContainer';
 import Spinner from '../Spinner/Spinner';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loadVideo } from '../../actions/videoActions';
+import { loadVideo, rateVideo } from '../../actions/videoActions';
 import formatDate from '../../utils/formatDate';
 
 function Main({
@@ -16,7 +16,9 @@ function Main({
     params: { videoId }
   },
   video: { loading, video },
-  loadVideo
+  loadVideo,
+  rateVideo,
+  history
 }) {
   const [suggestedVideos, setSuggestedVideos] = useState([]);
 
@@ -28,9 +30,10 @@ function Main({
         setSuggestedVideos(response.data.videos);
       } catch (e) {}
     };
-    loadVideo(videoId);
+    loadVideo(videoId, history);
     getVideo();
   }, [videoId]);
+
   if (loading) return <Spinner />;
   if (!video) return <Redirect to="/videos" />;
 
@@ -50,11 +53,23 @@ function Main({
             </div>
             <div className="right">
               <div className="likes">
-                <i className="fa fa-thumbs-up" />
-                13
+                <i
+                  className={
+                    'fa fa-thumbs-up' + (video.userRate === 1 ? ' pressed' : '')
+                  }
+                  onClick={() => rateVideo(videoId, 1)}
+                />
+                {video.likes}
               </div>
               <div className="dislikes">
-                <i className="fa fa-thumbs-down" />2
+                <i
+                  className={
+                    'fa fa-thumbs-down' +
+                    (video.userRate === -1 ? ' pressed' : '')
+                  }
+                  onClick={() => rateVideo(videoId, -1)}
+                />
+                {video.dislikes}
               </div>
             </div>
           </div>
@@ -87,5 +102,6 @@ function Main({
 const mapStateToProps = state => ({ video: state.video });
 
 export default connect(mapStateToProps, {
-  loadVideo
-})(Main);
+  loadVideo,
+  rateVideo
+})(withRouter(Main));

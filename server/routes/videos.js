@@ -1,12 +1,14 @@
 const express = require('express');
-const { protect } = require('../middleware/auth');
+const { protect, optionalProtect } = require('../middleware/auth');
 const router = express.Router();
 
 const {
   handleUpload,
   streamVideo,
   getAllVideos,
-  getVideo
+  getVideo,
+  getSuggestions,
+  rateVideo
 } = require('../controllers/videoController');
 
 router
@@ -16,6 +18,7 @@ router
 
 router.route('/stream/:videoId').get(streamVideo);
 router.use('/:videoId/comments', require('./comments'));
-router.route('/:videoId').get(getVideo);
-router.route('/:videoId/suggestions').get(getAllVideos);
+router.route('/:videoId/rate').post(protect, rateVideo);
+router.route('/:videoId').get(optionalProtect, getVideo);
+router.route('/:videoId/suggestions').get(getSuggestions);
 module.exports = router;

@@ -9,3 +9,4 @@ export const COMMENTS_FAILED = 'COMMENTS_FAILED';
 export const ADD_ERROR = 'ADD_ERROR';
 export const REMOVE_ERROR = 'REMOVE_ERROR';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const UPDATE_VIDEO_RATING = 'UPDATE_VIDEO_RATING';

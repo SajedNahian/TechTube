@@ -1,5 +1,6 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const path = require('path');
 
 const connectDB = require('./config/db');
 
@@ -16,6 +17,10 @@ app.use(fileUpload());
 
 const PORT = process.env.PORT || 5000;
 
+app.use(
+  '/api/thumbnails',
+  express.static(path.join(__dirname, '../', 'thumbnails'))
+);
 app.use('/api/videos', require('./routes/videos'));
 app.use('/api/user', require('./routes/user'));
 

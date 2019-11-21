@@ -6,7 +6,7 @@ export default (state = initialState, { payload, type }) => {
     case CLEAR_ERRORS:
       return [];
     case ADD_ERROR:
-      return [...state, payload];
+      return [...state.filter(err => err.message !== payload.message), payload];
     case REMOVE_ERROR:
       return state.filter(error => error.id !== payload);
     default:
