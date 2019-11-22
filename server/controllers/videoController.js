@@ -24,7 +24,7 @@ const generateThumbnails = (videoUUID, next, callback) => {
 module.exports.handleUpload = asyncHelper(async (req, res, next) => {
   const { title } = req.body;
 
-  if (req.files === null || title === null) {
+  if (req.files === null || !title) {
     return next({ status: 400, message: 'File and title are both required' });
   }
 
