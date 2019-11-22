@@ -4,6 +4,7 @@ import Main from './Components/Main/Main';
 import Videos from './Pages/Videos/Videos';
 import SignUp from './Pages/SignUp/SignUp';
 import Login from './Pages/Login/Login';
+import NotFound from './Pages/NotFound/NotFound';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import SignedInRoute from './Components/Routes/SignedInRoute';
 import SignedOutRoute from './Components/Routes/SignedOutRoute';
@@ -22,7 +23,7 @@ function MainRoutes({ auth: { loading } }) {
         <SignedOutRoute path="/signup" component={SignUp} />
         <Route path="/videos/:videoId" component={Main} />
         <Route path="/videos" component={Videos} />
-        <Route path="/">Sorry that was not found</Route>
+        <Route path="/" component={NotFound} />
       </Switch>
     </Router>
   );

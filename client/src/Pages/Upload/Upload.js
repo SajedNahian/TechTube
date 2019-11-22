@@ -15,6 +15,7 @@ function Upload({ addError }) {
   const onSubmit = async e => {
     e.preventDefault();
     const formData = new FormData();
+
     formData.append('file', file);
     formData.append('title', title);
 
@@ -51,7 +52,11 @@ function Upload({ addError }) {
       <h1 className="text-center title">Upload Video</h1>
       <form className="upload" onSubmit={onSubmit}>
         <div className="inputItem">
-          <input type="file" onChange={e => setFile(e.target.files[0])} />
+          <input
+            type="file"
+            onChange={e => setFile(e.target.files[0])}
+            id="fileUpload"
+          />
         </div>
         <div className="inputItem">
           <input

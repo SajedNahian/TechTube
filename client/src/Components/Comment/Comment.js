@@ -1,13 +1,27 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './Comment.scss';
 
-export default function Comment({ text, user: { username, profilePicture } }) {
+function Comment({
+  text,
+  user: { username, profilePicture },
+  username: authorUsername
+}) {
   return (
-    <div className="comment">
+    <div
+      className={
+        'comment' + (username === authorUsername ? ' author-comment' : '')
+      }
+    >
       <img className="profile-picture" src={profilePicture} />
-      <div className="comment-body">
+      <div className={'comment-body'}>
         <p>
-          <a className="username" href="#">
+          <a
+            className={
+              'username' + (username === authorUsername ? ' text-bold' : '')
+            }
+            href="#"
+          >
             {username}
           </a>
         </p>
@@ -19,3 +33,9 @@ export default function Comment({ text, user: { username, profilePicture } }) {
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  username: state.video.video.author.username
+});
+
+export default connect(mapStateToProps)(Comment);
