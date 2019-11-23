@@ -4,6 +4,7 @@ const asyncHelper = require('../utils/asyncHelper');
 const ffmpeg = require('fluent-ffmpeg');
 
 const Video = require('../models/Video');
+const Subscription = require('../models/Subscription');
 const Rate = require('../models/Rate');
 
 const generateThumbnails = (videoUUID, next, callback) => {
@@ -22,10 +23,10 @@ const generateThumbnails = (videoUUID, next, callback) => {
 };
 
 module.exports.handleUpload = asyncHelper(async (req, res, next) => {
-  const { title } = req.body;
+  const { title, tags } = req.body;
 
-  if (req.files === null || !title) {
-    return next({ status: 400, message: 'File and title are both required' });
+  if (req.files === null) {
+    return next({ status: 400, message: 'File is required' });
   }
 
   const file = req.files.file;
@@ -37,7 +38,22 @@ module.exports.handleUpload = asyncHelper(async (req, res, next) => {
     });
   }
 
-  const video = new Video({ title, author: req.user.id });
+  if (!tags) {
+    return next({
+      status: 400,
+      message: 'Video must have tags'
+    });
+  }
+
+  const video = new Video({
+    title,
+    author: req.user.id,
+    tags: tags
+      .replace(/ /g, '')
+      .toLowerCase()
+      .split(',')
+  });
+
   await video.save();
 
   file.mv(
@@ -84,15 +100,32 @@ module.exports.streamVideo = (req, res) => {
 };
 
 module.exports.getAllVideos = async (req, res) => {
-  const videos = await Video.find();
-  res.json({ videos });
+  const videos = await Video.find({
+    uuid: { $ne: req.params.videoId }
+  }).limit(10);
+  return res.json({ videos });
+
+  if (!req.user) {
+    const videos = await Video.find({
+      uuid: { $ne: req.params.videoId }
+    }).limit(10);
+    return res.json({ videos });
+  } else {
+    const subscriptions = (await Subscription.find({ from: req.user.id })).map(
+      subscription => subscription.to
+    );
+    const videos = await Video.find({ author: { $in: subscriptions } }).limit(
+      10
+    );
+    return res.json({ videos });
+  }
 };
 
 module.exports.getVideo = asyncHelper(async (req, res, next) => {
   const { videoId: uuid } = req.params;
   const video = await Video.findOne({ uuid }).populate(
     'author',
-    'username subscribers profilePicture'
+    'username profilePicture'
   );
 
   if (video) {
@@ -111,6 +144,12 @@ module.exports.getVideo = asyncHelper(async (req, res, next) => {
       object: video.id
     }).countDocuments();
 
+    const videoObject = video.toObject();
+
+    videoObject.author.subscribers = await Subscription.getSubCount(
+      video.author._id
+    );
+
     let userRate = req.user
       ? await Rate.findOne({
           onModel: 'Video',
@@ -119,9 +158,16 @@ module.exports.getVideo = asyncHelper(async (req, res, next) => {
         })
       : null;
 
+    videoObject.author.subscribed = req.user
+      ? (await Subscription.findOne({
+          from: req.user.id,
+          to: videoObject.author._id
+        })) != null
+      : false;
+
     res.json({
       video: {
-        ...video.toObject(),
+        ...videoObject,
         likes,
         dislikes,
         userRate: userRate ? userRate.value : 0
@@ -160,8 +206,28 @@ module.exports.rateVideo = asyncHelper(async (req, res, next) => {
 });
 
 module.exports.getSuggestions = asyncHelper(async (req, res, next) => {
-  const videos = await Video.find({ uuid: { $ne: req.params.videoId } }).limit(
-    4
-  );
-  res.json({ videos });
+  const video = await Video.findOne({ uuid: req.params.videoId });
+
+  if (!req.user) {
+    const videos = await Video.find({
+      uuid: { $ne: req.params.videoId }
+    }).limit(4);
+    return res.json({ videos });
+  } else {
+    const subscriptions = (await Subscription.find({ from: req.user.id })).map(
+      subscription => subscription.to
+    );
+
+    const videos = await Video.find({
+      $or: [
+        {
+          tags: { $in: video.tags }
+        },
+        { author: { $in: subscriptions } }
+      ],
+      uuid: { $ne: req.params.videoId }
+    }).limit(4);
+
+    return res.json({ videos });
+  }
 });

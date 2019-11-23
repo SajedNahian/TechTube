@@ -23,6 +23,7 @@ app.use(
 );
 app.use('/api/videos', require('./routes/videos'));
 app.use('/api/user', require('./routes/user'));
+app.use('/api/subscriptions', require('./routes/subscriptions'));
 
 // Error handling
 app.use(require('./middleware/errorHandler'));

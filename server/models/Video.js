@@ -24,6 +24,10 @@ const videoSchema = new mongoose.Schema({
     type: Date,
     required: [true, 'Video must have date posted'],
     default: Date.now
+  },
+  tags: {
+    type: [String],
+    required: [true, 'Video must have tags']
   }
 });
 
