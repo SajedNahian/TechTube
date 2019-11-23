@@ -22,11 +22,14 @@
 }
 
 .comment {
-  .text-bold {
-    font-weight: 600;
+  .username {
+    padding: 0.2rem 0.4rem;
   }
-}
-
-.author-comment {
-  border: 1px solid rgb(168, 167, 167);
+  .author-username {
+    background-color: lighten($color: #000000, $amount: 20);
+    border-radius: 8px;
+    color: white;
+  }
+  &-text {
+  }
 }

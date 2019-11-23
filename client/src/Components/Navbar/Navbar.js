@@ -31,6 +31,7 @@ function Navbar({ auth: { isAuthenticated }, errors }) {
       <nav>
         <div className="left">
           <Link to="/videos" className="logo">
+            <img src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c545.png" />
             TechTube
           </Link>
         </div>

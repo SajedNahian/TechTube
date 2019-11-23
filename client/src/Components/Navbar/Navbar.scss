@@ -10,7 +10,6 @@ nav {
 
   a {
     color: white;
-    margin-left: 1.2rem;
   }
 
   h2 {
@@ -20,6 +19,13 @@ nav {
   .logo {
     font-size: 1.2rem;
     color: white;
+
+    align-items: center;
+    display: flex;
+    img {
+      height: 24px;
+      margin-right: 0.4rem;
+    }
   }
 
   .profile {

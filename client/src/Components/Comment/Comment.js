@@ -18,7 +18,8 @@ function Comment({
         <p>
           <a
             className={
-              'username' + (username === authorUsername ? ' text-bold' : '')
+              'username' +
+              (username === authorUsername ? ' author-username' : '')
             }
             href="#"
           >
