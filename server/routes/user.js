@@ -5,13 +5,16 @@ const { protect } = require('../middleware/auth');
 const {
   createAccount,
   loginUser,
-  getMe
+  getMe,
+  uploadProfilePicture
 } = require('../controllers/userController');
 
 router
   .route('/')
   .post(createAccount)
   .get(protect, getMe);
+
+router.route('/profilePicture').post(protect, uploadProfilePicture);
 
 router.route('/login').post(loginUser);
 

@@ -11,6 +11,7 @@ import SignedOutRoute from './Components/Routes/SignedOutRoute';
 import { connect } from 'react-redux';
 import Spinner from './Components/Spinner/Spinner';
 import Navbar from './Components/Navbar/Navbar';
+import Profile from './Pages/Profile/Profile';
 
 function MainRoutes({ auth: { loading } }) {
   if (loading) return <Spinner />;
@@ -19,6 +20,7 @@ function MainRoutes({ auth: { loading } }) {
       <Navbar />
       <Switch>
         <SignedInRoute path="/upload" component={Upload} />
+        <SignedInRoute path="/profile" component={Profile} />
         <SignedOutRoute path="/login" component={Login} />
         <SignedOutRoute path="/signup" component={SignUp} />
         <Route path="/videos" exact component={Videos} />

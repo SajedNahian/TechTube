@@ -5,7 +5,14 @@ import { connect } from 'react-redux';
 import Alert from '../../Components/Alert/Alert';
 import { withRouter } from 'react-router-dom';
 
-function Navbar({ auth: { isAuthenticated }, errors, history }) {
+function Navbar({
+  auth: {
+    isAuthenticated,
+    user: { profilePicture }
+  },
+  errors,
+  history
+}) {
   const [query, setQuery] = useState('');
 
   const loggedOutLinks = (
@@ -23,10 +30,7 @@ function Navbar({ auth: { isAuthenticated }, errors, history }) {
         +
       </Link>
       <Link to="/profile" className="profile-link">
-        <img
-          className="profile"
-          src="https://icon-library.net/images/no-profile-picture-icon/no-profile-picture-icon-13.jpg"
-        />
+        <img className="profile" src={profilePicture} />
       </Link>
     </Fragment>
   );
@@ -44,8 +48,10 @@ function Navbar({ auth: { isAuthenticated }, errors, history }) {
           <input
             className="search"
             type="text"
+            placeholder="Search..."
             value={query}
             onKeyPress={e => {
+              if (query === '') return;
               if (e.key === 'Enter') history.push(`/videos?search=${query}`);
             }}
             onChange={e => {
@@ -55,6 +61,7 @@ function Navbar({ auth: { isAuthenticated }, errors, history }) {
           <button
             className="search-btn"
             onClick={() => {
+              if (query === '') return;
               history.push(`/videos?search=${query}`);
             }}
           >

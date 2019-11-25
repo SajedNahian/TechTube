@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const asyncHelper = require('../utils/asyncHelper');
+const path = require('path');
 
 module.exports.createAccount = asyncHelper(async (req, res, next) => {
   let user = await User.findOne({ username: req.body.username });
@@ -38,3 +39,37 @@ module.exports.loginUser = asyncHelper(async (req, res, next) => {
 module.exports.getMe = (req, res, next) => {
   return res.json({ user: req.user });
 };
+
+module.exports.uploadProfilePicture = asyncHelper(async (req, res, next) => {
+  if (req.files === null) {
+    return next({ status: 400, message: 'File is required' });
+  }
+
+  const file = req.files.file;
+
+  if (file.mimetype !== 'image/png') {
+    return next({
+      status: 400,
+      message: 'Must upload .png file'
+    });
+  }
+  const randomNum = Math.random();
+  req.user.profilePicture = `/api/profilePicture/${req.user.username}${randomNum}.png`;
+  await req.user.save();
+
+  file.mv(
+    path.join(
+      __dirname,
+      '../../',
+      '/profilePicture/',
+      `${req.user.username}${randomNum}` + '.png'
+    ),
+    err => {
+      if (err) {
+        return next(err);
+      }
+    }
+  );
+
+  res.json({ success: true });
+});

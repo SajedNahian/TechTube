@@ -29,8 +29,11 @@ function Main({
 }) {
   const [suggestedVideos, setSuggestedVideos] = useState([]);
   const [gettingVideo, setGettingVideo] = useState(false);
+  const [titleSet, setTitleSet] = useState(false);
 
   useEffect(() => {
+    document.title = 'TechTube';
+    setTitleSet(false);
     setGettingVideo(true);
     setSuggestedVideos([]);
     const getVideo = async () => {
@@ -41,12 +44,21 @@ function Main({
     };
     loadVideo(videoId, history);
     getVideo();
+
+    return () => {
+      document.title = 'TechTube';
+    };
   }, [videoId]);
 
   if (loading || !gettingVideo) return <Spinner />;
   if (!video) return <Redirect to="/videos" />;
 
   const { author } = video;
+
+  if (!titleSet) {
+    document.title = video.title;
+    setTitleSet(true);
+  }
 
   return (
     <div>
@@ -57,7 +69,10 @@ function Main({
             <div className="left">
               <h1 className="title">{video.title}</h1>
               <p>
-                {video.views} views - {formatDate(video.datePosted)}
+                {video.views} views{' '}
+                <span style={{ marginLeft: '.4rem', color: 'rgb(99, 97, 97)' }}>
+                  {formatDate(video.datePosted)}
+                </span>
               </p>
             </div>
             <div className="right">

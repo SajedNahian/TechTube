@@ -10,7 +10,7 @@ export const addError = message => dispatch => {
       type: REMOVE_ERROR,
       payload: id
     });
-  }, 8000);
+  }, 6000);
 };
 
 export const clearErrors = () => ({

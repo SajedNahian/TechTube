@@ -1,6 +1,7 @@
 import {
   USER_AUTHENTICATED,
-  USER_AUTHENTICATION_FAILED
+  USER_AUTHENTICATION_FAILED,
+  LOADING_USER
 } from '../actions/types';
 
 const initialState = {
@@ -11,6 +12,8 @@ const initialState = {
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case LOADING_USER:
+      return initialState;
     case USER_AUTHENTICATED:
       return {
         ...state,

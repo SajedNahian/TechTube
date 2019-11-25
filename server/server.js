@@ -21,6 +21,12 @@ app.use(
   '/api/thumbnails',
   express.static(path.join(__dirname, '../', 'thumbnails'))
 );
+
+app.use(
+  '/api/profilePicture',
+  express.static(path.join(__dirname, '../', 'profilePicture'))
+);
+
 app.use('/api/videos', require('./routes/videos'));
 app.use('/api/user', require('./routes/user'));
 app.use('/api/subscriptions', require('./routes/subscriptions'));

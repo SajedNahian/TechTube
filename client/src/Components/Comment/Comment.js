@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './Comment.scss';
+import formatDateFrom from '../../utils/formatDateFrom';
 
 function Comment({
   text,
   user: { username, profilePicture },
-  username: authorUsername
+  username: authorUsername,
+  date
 }) {
   return (
     <div
@@ -25,6 +27,9 @@ function Comment({
           >
             {username}
           </a>
+          <span style={{ paddingLeft: '.4rem', color: 'rgb(99, 97, 97)' }}>
+            {formatDateFrom(date)}
+          </span>
         </p>
         <p className="comment-text">{text}</p>
         {/* <p className="votes">

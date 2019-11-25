@@ -1,10 +1,17 @@
-import { USER_AUTHENTICATED, USER_AUTHENTICATION_FAILED } from './types';
+import {
+  USER_AUTHENTICATED,
+  USER_AUTHENTICATION_FAILED,
+  LOADING_USER
+} from './types';
 import setAuthToken from '../utils/setAuthToken';
 import axios from 'axios';
 import saveAuthToken from '../utils/saveAuthToken';
 import { addError, clearErrors } from './errorsActions';
 
 export const authenticateUser = () => async dispatch => {
+  dispatch({
+    type: LOADING_USER
+  });
   try {
     const response = await axios.get('/api/user');
     dispatch({
