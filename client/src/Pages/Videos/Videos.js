@@ -20,7 +20,7 @@ function Videos({ videos, loading, getVideos, location }) {
         <p className="text-center">
           {location.search
             ? 'No results found. Try a different search.'
-            : 'Please subscribe to channels to get reccommended videos or search for a video'}
+            : 'Please subscribe to channels to get reccommended videos.'}
         </p>
       )}
       <div className="videos">

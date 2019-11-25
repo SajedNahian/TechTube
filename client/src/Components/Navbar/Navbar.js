@@ -5,14 +5,7 @@ import { connect } from 'react-redux';
 import Alert from '../../Components/Alert/Alert';
 import { withRouter } from 'react-router-dom';
 
-function Navbar({
-  auth: {
-    isAuthenticated,
-    user: { profilePicture }
-  },
-  errors,
-  history
-}) {
+function Navbar({ auth: { isAuthenticated, user }, errors, history }) {
   const [query, setQuery] = useState('');
 
   const loggedOutLinks = (
@@ -30,7 +23,10 @@ function Navbar({
         +
       </Link>
       <Link to="/profile" className="profile-link">
-        <img className="profile" src={profilePicture} />
+        <img
+          className="profile"
+          src={isAuthenticated ? user.profilePicture : ''}
+        />
       </Link>
     </Fragment>
   );

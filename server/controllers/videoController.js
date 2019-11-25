@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const AWS = require('aws-sdk');
 const asyncHelper = require('../utils/asyncHelper');
 const ffmpeg = require('fluent-ffmpeg');
 
@@ -7,13 +8,23 @@ const Video = require('../models/Video');
 const Subscription = require('../models/Subscription');
 const Rate = require('../models/Rate');
 
+const { upload } = require('../utils/s3');
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+});
+
 const generateThumbnails = (videoUUID, next, callback) => {
   ffmpeg(path.join(__dirname, '../../', '/uploads/', videoUUID + '.mp4'))
     .on('error', err => {
       next(err);
     })
     .on('end', () => {
-      callback();
+      fs.unlink(
+        path.join(__dirname, '../../', '/uploads/', videoUUID + '.mp4'),
+        () => callback()
+      );
     })
     .screenshots({
       count: 1,
@@ -55,51 +66,63 @@ module.exports.handleUpload = asyncHelper(async (req, res, next) => {
   });
 
   await video.save();
-
-  file.mv(
-    path.join(__dirname, '../../', '/uploads/', video.uuid + '.mp4'),
-    err => {
-      if (err) {
-        return next(err);
+  upload(s3, file.data, video.uuid + '.mp4', () => {
+    file.mv(
+      path.join(__dirname, '../../', '/uploads/', video.uuid + '.mp4'),
+      err => {
+        if (err) {
+          return next(err);
+        }
       }
-    }
-  );
+    );
 
-  generateThumbnails(video.uuid, next, () => res.json({ success: true }));
+    generateThumbnails(video.uuid, next, () => res.json({ success: true }));
+  });
 });
 
-module.exports.streamVideo = (req, res) => {
-  const vidPath =
-    path.join(__dirname, '../', '../', '/uploads') +
-    `/${req.params.videoId}.mp4`;
-  const stat = fs.statSync(vidPath);
-  const fileSize = stat.size;
+module.exports.streamVideo = async (req, res) => {
   const range = req.headers.range;
-  if (range) {
+  if (!range) {
+    const s3File = await s3
+      .getObject({
+        Bucket: 'this-bucket-is-only-for-testing',
+        Key: `${req.params.videoId}.mp4`
+      })
+      .createReadStream();
+    s3File.pipe(res);
+  } else {
+    const fileSize = (
+      await s3
+        .headObject({
+          Bucket: 'this-bucket-is-only-for-testing',
+          Key: `${req.params.videoId}.mp4`
+        })
+        .promise()
+    ).ContentLength;
     const parts = range.replace(/bytes=/, '').split('-');
     const start = parseInt(parts[0], 10);
     const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
     const chunksize = end - start + 1;
-    const file = fs.createReadStream(vidPath, { start, end });
+    const s3File = await s3
+      .getObject({
+        Bucket: 'this-bucket-is-only-for-testing',
+        Key: `${req.params.videoId}.mp4`,
+        Range: range
+      })
+      .createReadStream();
     const head = {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
       'Accept-Ranges': 'bytes',
       'Content-Length': chunksize,
       'Content-Type': 'video/mp4'
     };
+    // console.log(head);
     res.writeHead(206, head);
-    file.pipe(res);
-  } else {
-    const head = {
-      'Content-Length': fileSize,
-      'Content-Type': 'video/mp4'
-    };
-    res.writeHead(200, head);
-    fs.createReadStream(vidPath).pipe(res);
+    s3File.pipe(res);
   }
 };
 
-module.exports.getAllVideos = async (req, res) => {
+module.exports.getAllVideos = asyncHelper(async (req, res) => {
   if (req.query.search) {
     //is searching
     const videos = await Video.find({
@@ -122,7 +145,7 @@ module.exports.getAllVideos = async (req, res) => {
     );
     return res.json({ videos });
   }
-};
+});
 
 module.exports.getVideo = asyncHelper(async (req, res, next) => {
   const { videoId: uuid } = req.params;
@@ -170,6 +193,12 @@ module.exports.getSuggestions = asyncHelper(async (req, res, next) => {
 
   if (!req.user) {
     const videos = await Video.find({
+      $or: [
+        {
+          tags: { $in: video.tags }
+        }
+      ],
+      $text: { $search: video.title },
       uuid: { $ne: req.params.videoId }
     }).limit(4);
     return res.json({ videos });

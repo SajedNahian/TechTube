@@ -1,6 +1,12 @@
 const User = require('../models/User');
+const AWS = require('aws-sdk');
 const asyncHelper = require('../utils/asyncHelper');
-const path = require('path');
+const { upload } = require('../utils/s3');
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+});
 
 module.exports.createAccount = asyncHelper(async (req, res, next) => {
   let user = await User.findOne({ username: req.body.username });
@@ -56,20 +62,7 @@ module.exports.uploadProfilePicture = asyncHelper(async (req, res, next) => {
   const randomNum = Math.random();
   req.user.profilePicture = `/api/profilePicture/${req.user.username}${randomNum}.png`;
   await req.user.save();
-
-  file.mv(
-    path.join(
-      __dirname,
-      '../../',
-      '/profilePicture/',
-      `${req.user.username}${randomNum}` + '.png'
-    ),
-    err => {
-      if (err) {
-        return next(err);
-      }
-    }
-  );
-
-  res.json({ success: true });
+  upload(s3, file.data, `${req.user.username}${randomNum}.png`, () => {
+    res.json({ success: true });
+  });
 });

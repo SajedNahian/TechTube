@@ -51,7 +51,7 @@ export const subscribeToUser = userId => async dispatch => {
       type: SUBSCRIBE_SUCCESS
     });
   } catch (err) {
-    dispatch(addError('You must be logged in to subscribe to users'));
+    dispatch(addError('You must be logged in to subscribe'));
   }
 };
 

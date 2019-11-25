@@ -24,10 +24,15 @@
 .comment {
   .username {
     padding: 0.2rem 0.4rem;
+    border-radius: 8px;
+    background-color: lighten($color: #000000, $amount: 90);
   }
   .author-username {
     background-color: lighten($color: #000000, $amount: 20);
-    border-radius: 8px;
     color: white;
+  }
+  .comment-text {
+    padding-top: 0.1rem;
+    padding-left: 0.1rem;
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import ProgressBar from '../../Components/ProgressBar/ProgressBar';
+import Spinner from '../../Components/Spinner/Spinner';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './Upload.scss';
@@ -77,6 +78,7 @@ function Upload({ addError }) {
           />
         </div>
         {percentUploaded > 0 && <ProgressBar percent={percentUploaded} />}
+        {percentUploaded > 0 && <Spinner />}
         <button className="btn">Upload</button>
       </form>
     </div>
