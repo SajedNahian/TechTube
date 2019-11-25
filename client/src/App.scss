@@ -28,6 +28,12 @@ p {
 
   &-red {
     background-color: #cc0000;
+    color: white;
+  }
+
+  &-gray {
+    background-color: rgb(221, 221, 221);
+    color: black;
   }
 }
 

@@ -100,22 +100,25 @@ module.exports.streamVideo = (req, res) => {
 };
 
 module.exports.getAllVideos = async (req, res) => {
-  const videos = await Video.find({
-    uuid: { $ne: req.params.videoId }
-  }).limit(10);
-  return res.json({ videos });
+  if (req.query.search) {
+    //is searching
+    const videos = await Video.find({
+      $text: { $search: req.query.search }
+    }).limit(10);
+    return res.json({ videos });
+  }
 
   if (!req.user) {
     const videos = await Video.find({
       uuid: { $ne: req.params.videoId }
-    }).limit(10);
+    }).limit(12);
     return res.json({ videos });
   } else {
     const subscriptions = (await Subscription.find({ from: req.user.id })).map(
       subscription => subscription.to
     );
     const videos = await Video.find({ author: { $in: subscriptions } }).limit(
-      10
+      12
     );
     return res.json({ videos });
   }
@@ -129,50 +132,7 @@ module.exports.getVideo = asyncHelper(async (req, res, next) => {
   );
 
   if (video) {
-    video.views += 1;
-    video.save();
-
-    const likes = await Rate.find({
-      onModel: 'Video',
-      value: 1,
-      object: video.id
-    }).countDocuments();
-
-    const dislikes = await Rate.find({
-      onModel: 'Video',
-      value: -1,
-      object: video.id
-    }).countDocuments();
-
-    const videoObject = video.toObject();
-
-    videoObject.author.subscribers = await Subscription.getSubCount(
-      video.author._id
-    );
-
-    let userRate = req.user
-      ? await Rate.findOne({
-          onModel: 'Video',
-          object: video.id,
-          user: req.user.id
-        })
-      : null;
-
-    videoObject.author.subscribed = req.user
-      ? (await Subscription.findOne({
-          from: req.user.id,
-          to: videoObject.author._id
-        })) != null
-      : false;
-
-    res.json({
-      video: {
-        ...videoObject,
-        likes,
-        dislikes,
-        userRate: userRate ? userRate.value : 0
-      }
-    });
+    res.json(await video.getFullInfo(req.user));
   } else {
     next({ status: 404, message: 'That video was not found on our server' });
   }

@@ -21,8 +21,8 @@ function MainRoutes({ auth: { loading } }) {
         <SignedInRoute path="/upload" component={Upload} />
         <SignedOutRoute path="/login" component={Login} />
         <SignedOutRoute path="/signup" component={SignUp} />
+        <Route path="/videos" exact component={Videos} />
         <Route path="/videos/:videoId" component={Main} />
-        <Route path="/videos" component={Videos} />
         <Route path="/" component={NotFound} />
       </Switch>
     </Router>

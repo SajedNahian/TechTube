@@ -37,6 +37,29 @@ nav {
     }
   }
 
+  .search-container {
+    display: flex;
+
+    .search {
+      border: none;
+      padding: 0.5rem 0.4rem;
+      width: 440px;
+      border: 1px solid rgb(199, 199, 199);
+
+      &:focus {
+        outline: none;
+      }
+
+      &-btn {
+        cursor: pointer;
+        width: 50px;
+        border: 1px solid rgb(199, 199, 199);
+        border-left: none;
+        background-color: rgb(231, 230, 230);
+      }
+    }
+  }
+
   .right {
     display: flex;
     align-items: center;

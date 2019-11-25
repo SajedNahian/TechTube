@@ -1,13 +1,18 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import './Navbar.scss';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Alert from '../../Components/Alert/Alert';
+import { withRouter } from 'react-router-dom';
 
-function Navbar({ auth: { isAuthenticated }, errors }) {
+function Navbar({ auth: { isAuthenticated }, errors, history }) {
+  const [query, setQuery] = useState('');
+
   const loggedOutLinks = (
     <Fragment>
-      <Link to="/login">Log In</Link>
+      <Link to="/login" style={{ marginRight: '1rem' }}>
+        Log In
+      </Link>
       <Link to="/signup">Sign Up</Link>
     </Fragment>
   );
@@ -19,7 +24,7 @@ function Navbar({ auth: { isAuthenticated }, errors }) {
       </Link>
       <Link to="/profile" className="profile-link">
         <img
-          class="profile"
+          className="profile"
           src="https://icon-library.net/images/no-profile-picture-icon/no-profile-picture-icon-13.jpg"
         />
       </Link>
@@ -34,6 +39,27 @@ function Navbar({ auth: { isAuthenticated }, errors }) {
             <img src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c545.png" />
             TechTube
           </Link>
+        </div>
+        <div className="search-container">
+          <input
+            className="search"
+            type="text"
+            value={query}
+            onKeyPress={e => {
+              if (e.key === 'Enter') history.push(`/videos?search=${query}`);
+            }}
+            onChange={e => {
+              setQuery(e.target.value);
+            }}
+          />
+          <button
+            className="search-btn"
+            onClick={() => {
+              history.push(`/videos?search=${query}`);
+            }}
+          >
+            <i className="fa fa-search"></i>
+          </button>
         </div>
         <div className="right">
           {isAuthenticated ? loggedInLinks : loggedOutLinks}
@@ -51,4 +77,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps)(withRouter(Navbar));

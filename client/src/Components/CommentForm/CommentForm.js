@@ -18,6 +18,9 @@ function CommentForm({ postComment, videoId, auth: { user } }) {
           <textarea
             placeholder="What are your thoughts?"
             onChange={e => setText(e.target.value)}
+            onKeyPress={e => {
+              if (e.key === 'Enter') onSubmit(e);
+            }}
             value={text}
           ></textarea>{' '}
           <button className="btn">Comment</button>

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Rate = require('./Rate');
+const Subscription = require('./Subscription');
 const shortid = require('shortid');
 
 const videoSchema = new mongoose.Schema({
@@ -30,5 +32,54 @@ const videoSchema = new mongoose.Schema({
     required: [true, 'Video must have tags']
   }
 });
+
+videoSchema.methods.getFullInfo = async function(user) {
+  const likes = await Rate.find({
+    onModel: 'Video',
+    value: 1,
+    object: this._id
+  }).countDocuments();
+
+  const dislikes = await Rate.find({
+    onModel: 'Video',
+    value: -1,
+    object: this._id
+  }).countDocuments();
+
+  const videoObject = this.toObject();
+
+  videoObject.author.subscribers = await Subscription.getSubCount(
+    this.author._id
+  );
+
+  let userRate = user
+    ? await Rate.findOne({
+        onModel: 'Video',
+        object: this._id,
+        user: user.id
+      })
+    : null;
+
+  videoObject.author.subscribed = user
+    ? (await Subscription.findOne({
+        from: user.id,
+        to: videoObject.author._id
+      })) != null
+    : false;
+
+  this.views += 1;
+  this.save();
+
+  return {
+    video: {
+      ...videoObject,
+      likes,
+      dislikes,
+      userRate: userRate ? userRate.value : 0
+    }
+  };
+};
+
+videoSchema.index({ title: 'text' });
 
 module.exports = mongoose.model('Video', videoSchema);

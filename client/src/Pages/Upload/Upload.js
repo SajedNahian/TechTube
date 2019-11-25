@@ -9,6 +9,7 @@ import { addError } from '../../actions/errorsActions';
 function Upload({ addError }) {
   const [file, setFile] = useState('');
   const [title, setTitle] = useState('');
+  const [tags, setTags] = useState('');
   const [percentUploaded, setPercentUploaded] = useState(0);
   const [uploadComplete, setUploadComplete] = useState(false);
 
@@ -18,6 +19,7 @@ function Upload({ addError }) {
 
     formData.append('file', file);
     formData.append('title', title);
+    formData.append('tags', tags);
 
     try {
       await axios.post('/api/videos', formData, {
@@ -61,9 +63,17 @@ function Upload({ addError }) {
         <div className="inputItem">
           <input
             type="text"
-            placeholder="Title"
+            placeholder="Title (ex: Creating Classes in Java)"
             value={title}
             onChange={e => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="inputItem">
+          <input
+            type="text"
+            placeholder="Tags (ex: tech,coding,java)"
+            value={tags}
+            onChange={e => setTags(e.target.value)}
           />
         </div>
         {percentUploaded > 0 && <ProgressBar percent={percentUploaded} />}

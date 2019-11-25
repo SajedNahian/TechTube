@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Suggestion from '../../Components/Suggestion/Suggestion';
 import Spinner from '../../Components/Spinner/Spinner';
 import './Videos.scss';
+import { connect } from 'react-redux';
+import { getVideos } from '../../actions/videoActions';
 
-export default function Videos() {
-  const [videos, setVideos] = useState([]);
-
+function Videos({ videos, loading, getVideos, location }) {
+  const [gettingVideos, setGettingVideos] = useState(false);
   useEffect(() => {
-    const getVideos = async () => {
-      const response = await axios.get('/api/videos');
-      setVideos(response.data.videos);
-    };
-    getVideos();
-  }, []);
+    setGettingVideos(true);
+    getVideos(location.search);
+  }, [location.search]);
 
-  if (videos.length === 0) return <Spinner />;
+  if (loading || !gettingVideos) return <Spinner />;
 
   return (
     <div className="videoMain">
+      {videos.length === 0 && (
+        <p className="text-center">
+          {location.search
+            ? 'No results found. Try a different search.'
+            : 'Please subscribe to channels to get reccommended videos or search for a video'}
+        </p>
+      )}
       <div className="videos">
         {videos.map(video => (
           <Suggestion key={video.uuid} {...video} />
@@ -27,3 +31,10 @@ export default function Videos() {
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  videos: state.video.videos,
+  loading: state.video.loading
+});
+
+export default connect(mapStateToProps, { getVideos })(Videos);

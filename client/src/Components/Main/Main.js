@@ -8,7 +8,12 @@ import CommentsContainer from '../CommentsContainer/CommentsContainer';
 import Spinner from '../Spinner/Spinner';
 import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loadVideo, rateVideo } from '../../actions/videoActions';
+import {
+  loadVideo,
+  rateVideo,
+  subscribeToUser,
+  unsubscribeToUser
+} from '../../actions/videoActions';
 import formatDate from '../../utils/formatDate';
 
 function Main({
@@ -18,11 +23,15 @@ function Main({
   video: { loading, video },
   loadVideo,
   rateVideo,
-  history
+  history,
+  subscribeToUser,
+  unsubscribeToUser
 }) {
   const [suggestedVideos, setSuggestedVideos] = useState([]);
+  const [gettingVideo, setGettingVideo] = useState(false);
 
   useEffect(() => {
+    setGettingVideo(true);
     setSuggestedVideos([]);
     const getVideo = async () => {
       try {
@@ -34,7 +43,7 @@ function Main({
     getVideo();
   }, [videoId]);
 
-  if (loading) return <Spinner />;
+  if (loading || !gettingVideo) return <Spinner />;
   if (!video) return <Redirect to="/videos" />;
 
   const { author } = video;
@@ -81,7 +90,15 @@ function Main({
                 <p>{author.subscribers} subscribers</p>
               </p>
             </div>
-            <button className="btn btn-red">Subscribe</button>
+            <button
+              className={'btn ' + (author.subscribed ? 'btn-gray' : 'btn-red')}
+              onClick={() => {
+                if (author.subscribed) unsubscribeToUser(author._id);
+                else subscribeToUser(author._id);
+              }}
+            >
+              {author.subscribed ? 'Unsubsribe' : 'Subscribe'}
+            </button>
           </div>
         </div>
         <div className="suggestions">
@@ -103,5 +120,7 @@ const mapStateToProps = state => ({ video: state.video });
 
 export default connect(mapStateToProps, {
   loadVideo,
-  rateVideo
+  rateVideo,
+  subscribeToUser,
+  unsubscribeToUser
 })(withRouter(Main));
