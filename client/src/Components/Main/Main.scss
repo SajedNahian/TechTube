@@ -58,6 +58,11 @@
     grid-row: 1 / span 3;
     grid-column: 2 / span 2;
 
+    .no-suggestions {
+      padding: 0.8rem;
+      color: rgb(146, 145, 145);
+    }
+
     .suggestion {
       padding: 0.8rem;
       margin-bottom: 0.8rem;

@@ -185,6 +185,7 @@ module.exports.getSuggestions = asyncHelper(async (req, res, next) => {
         },
         { author: { $in: subscriptions } }
       ],
+      $text: { $search: video.title },
       uuid: { $ne: req.params.videoId }
     }).limit(4);
 

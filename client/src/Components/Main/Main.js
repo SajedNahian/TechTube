@@ -28,6 +28,7 @@ function Main({
   unsubscribeToUser
 }) {
   const [suggestedVideos, setSuggestedVideos] = useState([]);
+  const [suggestedVideosLoading, setSuggestedVideosLoading] = useState(true);
   const [gettingVideo, setGettingVideo] = useState(false);
   const [titleSet, setTitleSet] = useState(false);
 
@@ -40,6 +41,7 @@ function Main({
       try {
         let response = await axios.get(`/api/videos/${videoId}/suggestions`);
         setSuggestedVideos(response.data.videos);
+        setSuggestedVideosLoading(false);
       } catch (e) {}
     };
     loadVideo(videoId, history);
@@ -117,8 +119,13 @@ function Main({
           </div>
         </div>
         <div className="suggestions">
-          {suggestedVideos.length === 0 ? (
+          {suggestedVideosLoading ? (
             <Spinner />
+          ) : suggestedVideos.length === 0 ? (
+            <p className="text-center no-suggestions">
+              Hmmm... we don't have enough videos to offer any reccommendations
+              here.
+            </p>
           ) : (
             suggestedVideos.map(video => (
               <Suggestion key={video.uuid} {...video} />
