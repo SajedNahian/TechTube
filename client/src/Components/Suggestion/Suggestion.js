@@ -5,7 +5,7 @@ import './Suggestion.scss';
 export default function Suggestion({ title, uuid, views }) {
   return (
     <Link to={`/videos/${uuid}`}>
-      <div className="suggestion">
+      <div className="suggestion box-shadow">
         <img src={`/api/thumbnails/${uuid}.png`} />
         <h3>{title}</h3>
         <p>{views} views</p>

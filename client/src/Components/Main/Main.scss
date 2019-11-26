@@ -57,6 +57,7 @@
   .suggestions {
     grid-row: 1 / span 3;
     grid-column: 2 / span 2;
+    margin-left: 0.8rem;
 
     .no-suggestions {
       padding: 0.8rem;
@@ -67,7 +68,7 @@
       padding: 0.8rem;
       margin-bottom: 0.8rem;
       box-shadow: 0 1px #ffffff inset, 0 1px 3px rgba(34, 25, 25, 0.4);
-      margin-left: 1.2rem;
+      // margin-left: 1.2rem;
       img {
         width: 100%;
       }
@@ -99,4 +100,18 @@
 .video-react-time-divider,
 .video-react-duration-display {
   font-family: 'Montserrat', sans-serif !important;
+}
+
+@media only screen and (max-width: 850px) {
+  .main {
+    display: flex;
+    flex-direction: column;
+
+    .suggestions {
+      margin: 0.8rem 0;
+      display: grid;
+      grid-gap: 0.8rem;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
 }

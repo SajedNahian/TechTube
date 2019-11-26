@@ -70,3 +70,36 @@ nav {
     }
   }
 }
+
+@media only screen and (max-width: 850px) {
+  nav {
+    height: 6rem;
+    display: grid;
+    // align-items: center;
+    // justify-content: center;
+    .logo {
+      margin-bottom: 0.8rem;
+    }
+    grid-template-areas:
+      'left right'
+      'search search';
+
+    .search-container {
+      // margin-top: 0.4rem;
+      grid-area: search;
+      .search {
+        width: 100%;
+      }
+    }
+  }
+
+  .left {
+    grid-area: left;
+    align-self: end;
+  }
+
+  .right {
+    grid-area: right;
+    justify-self: end;
+  }
+}
