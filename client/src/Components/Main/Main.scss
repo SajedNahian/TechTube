@@ -1,6 +1,6 @@
 .main {
   background-color: white;
-  padding: 1.2rem 1.2rem;
+  padding: 1.2rem;
   display: grid;
   grid-template-columns: 3fr 1fr;
   .video {
@@ -104,6 +104,7 @@
 
 @media only screen and (max-width: 850px) {
   .main {
+    padding: 0.8rem;
     display: flex;
     flex-direction: column;
 
