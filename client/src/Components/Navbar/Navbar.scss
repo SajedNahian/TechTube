@@ -8,6 +8,16 @@ nav {
   background-color: #333;
   color: white;
 
+  .mobile-search {
+    cursor: pointer;
+    display: none;
+    width: 50px;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    background-color: transparent;
+  }
+
   a {
     color: white;
   }
@@ -71,9 +81,34 @@ nav {
   }
 }
 
-@media only screen and (max-width: 850px) {
+@media only screen and (max-width: 800px) {
   nav {
-    height: 6rem;
+    .mobile-search {
+      display: block;
+    }
+
+    .mobile-search-field {
+      margin-top: 0.2rem;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      input {
+        background-color: white;
+        padding: 0.4rem 0.6rem;
+        width: 80%;
+      }
+
+      grid-column: 1 / span 2;
+
+      .mobile-icon {
+        font-size: 1.2rem;
+        background-color: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+      }
+    }
+    // height: 6rem;
     display: grid;
     // align-items: center;
     // justify-content: center;
@@ -85,6 +120,7 @@ nav {
       'search search';
 
     .search-container {
+      display: none;
       // margin-top: 0.4rem;
       grid-area: search;
       .search {

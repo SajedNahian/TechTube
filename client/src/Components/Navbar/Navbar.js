@@ -7,6 +7,13 @@ import { withRouter } from 'react-router-dom';
 
 function Navbar({ auth: { isAuthenticated, user }, errors, history }) {
   const [query, setQuery] = useState('');
+  const [showMobileSearch, setMobileSearch] = useState(false);
+  const [width, setWidth] = useState(window.innerWidth);
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 800) setMobileSearch(false);
+    setWidth(window.innerWidth);
+  });
 
   const loggedOutLinks = (
     <Fragment>
@@ -19,6 +26,9 @@ function Navbar({ auth: { isAuthenticated, user }, errors, history }) {
 
   const loggedInLinks = (
     <Fragment>
+      <button className="mobile-search" onClick={() => setMobileSearch(true)}>
+        <i className="fa fa-search"></i>
+      </button>
       <Link to="/upload" className="upload-btn">
         +
       </Link>
@@ -30,6 +40,43 @@ function Navbar({ auth: { isAuthenticated, user }, errors, history }) {
       </Link>
     </Fragment>
   );
+
+  if (showMobileSearch && width < 800) {
+    return (
+      <nav>
+        <div className="mobile-search-field">
+          <button
+            className="mobile-icon"
+            onClick={() => setMobileSearch(false)}
+          >
+            <i className="fa fa-arrow-left"></i>
+          </button>
+          <input
+            className=""
+            type="text"
+            placeholder="Search..."
+            value={query}
+            onKeyPress={e => {
+              if (query === '') return;
+              if (e.key === 'Enter') history.push(`/videos?search=${query}`);
+            }}
+            onChange={e => {
+              setQuery(e.target.value);
+            }}
+          />
+          <button
+            className="mobile-icon"
+            onClick={() => {
+              if (query === '') return;
+              history.push(`/videos?search=${query}`);
+            }}
+          >
+            <i className="fa fa-search"></i>
+          </button>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <Fragment>
