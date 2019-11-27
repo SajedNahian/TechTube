@@ -140,9 +140,11 @@ module.exports.getAllVideos = asyncHelper(async (req, res) => {
     const subscriptions = (await Subscription.find({ from: req.user.id })).map(
       subscription => subscription.to
     );
-    const videos = await Video.find({ author: { $in: subscriptions } }).limit(
-      12
-    );
+    const videos = await Video.find({
+      $or: [{ author: { $in: subscriptions } }, {}]
+    })
+      .sort('-views')
+      .limit(12);
     return res.json({ videos });
   }
 });
